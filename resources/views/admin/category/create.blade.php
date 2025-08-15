@@ -34,7 +34,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="slug">Slug</label>
-                                    <input type="text" name="slug" id="slug" class="form-control"
+                                    <input type="text" readonly name="slug" id="slug" class="form-control"
                                         placeholder="Slug">
                                     <p></p>
                                 </div>
@@ -73,7 +73,7 @@
                 data: element.serializeArray(),
                 dataType: 'json',
                 success: function(response) {
-                    if (response["status"] == true) {   
+                    if (response["status"] == true) {
                         console.log('under true d');
                         $("#name").removeClass('is-invalid').siblings('p').removeClass(
                             'invalid-feedback').html("");
@@ -102,6 +102,20 @@
                 },
                 error: function(jqXHR, exception) {
                     console.log('something went wrong');
+                }
+            });
+        });
+        $("#name").change(function() {
+            var elem = $(this);
+            $.ajax({
+                url: '{{ route('getSlug') }}',
+                type: 'get',
+                data: {title:elem.val()},
+                dataType: 'json',
+                success: function(response) {
+                    if(response["status"] == true){;
+                        $("#slug").val(response['slug']);
+                    }
                 }
             });
         });

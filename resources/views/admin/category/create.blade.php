@@ -9,7 +9,7 @@
                     <h1>Create Category</h1>
                 </div>
                 <div class="col-sm-6 text-right">
-                    <a href="categories.html" class="btn btn-primary">Back</a>
+                    <a href="{{ route('categories.index') }}" class="btn btn-primary">Back</a>
                 </div>
             </div>
         </div>
@@ -53,7 +53,7 @@
                 </div>
                 <div class="pb-5 pt-3">
                     <button type="submit" class="btn btn-primary" id="submit">Create</button>
-                    <a href="#" class="btn btn-outline-dark ml-3">Cancel</a>
+                    <a href="{{ route('categories.index') }}" class="btn btn-outline-dark ml-3">Cancel</a>
                 </div>
             </form>
         </div>
@@ -67,13 +67,16 @@
         $("#categoryForm").submit(function(event) {
             event.preventDefault();
             var element = $(this);
+            $("button[type=submit]").prop('disabled',true);
             $.ajax({
                 url: '{{ route('categories.store') }}',
                 type: 'post',
                 data: element.serializeArray(),
                 dataType: 'json',
                 success: function(response) {
+                    $("button[type=submit]").prop('disabled',false);
                     if (response["status"] == true) {
+                        window.location.href="{{ route('categories.index') }}";
                         console.log('under true d');
                         $("#name").removeClass('is-invalid').siblings('p').removeClass(
                             'invalid-feedback').html("");
@@ -107,12 +110,14 @@
         });
         $("#name").change(function() {
             var elem = $(this);
+            $("button[type=submit]").prop('disabled',true);
             $.ajax({
                 url: '{{ route('getSlug') }}',
                 type: 'get',
                 data: {title:elem.val()},
                 dataType: 'json',
                 success: function(response) {
+                    $("button[type=submit]").prop('disabled',false);
                     if(response["status"] == true){;
                         $("#slug").val(response['slug']);
                     }
